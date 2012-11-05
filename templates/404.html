@@ -1,0 +1,79 @@
+{% spaceless %}
+{% load media %}
+{% load flatpages %}
+{% get_flatpages as flatpages %}
+
+<!--Add min to css-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}{{ settings.title }}{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% media "bootstrap/css/bootstrap.css" "no-timestamp" %}" type="text/css" media="all" />
+        <link rel="stylesheet" href="{% media "bootstrap/css/bootstrap-responsive.css" "no-timestamp" %}" type="text/css">
+        <link rel="stylesheet" href="{% media "main.css" "no-timestamp" %}" type="text/css" media="all" />
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script type="text/javascript" src="{% media "bootstrap/js/bootstrap.min.js" "no-timestamp" %}"></script>
+        <script type="text/javascript" src="{% media "bootstrap/js/bootstrap-collapse.js" "no-timestamp" %}"></script>
+        <script type="text/javascript" src="{% media "bootstrap/js/bootstrap-carousel.js" "no-timestamp" %}"></script>
+        <script type="text/javascript" src="{% media "general.js" "no-timestamp" %}"></script>
+        <meta name="description" content="{{ settings.description }}">
+        <meta name="keywords" content="{{ settings.keywords }}">
+        {% block extra %}{% endblock %}
+    </head>
+    <body>
+    
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="/index/">{{ settings.title }}</a>
+                    <div class="nav-collapse collapse">
+                        {% if settings.phone %}
+                        <p class="navbar-text pull-right">
+                            <span id="menu_info">{{ settings.phone }}</span>
+                        </p>
+                        {% endif %}
+                        <ul class="nav">
+                            {% for page in flatpages %}
+                                <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div><!--/.nav-collapse -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <!--sidebar start-->
+                <div class="span3">
+                    <ul class="nav nav-list well">
+                        {% block sidemenu %}
+                            {% for category in categories %}
+                                <li><a href="/category/{{ category.id }}">{% firstof category.new_title category.title %}</a></li>
+                            {% endfor %}
+                        {% endblock %}
+                    </ul>
+                </div>
+                <!--sidebar end-->
+                <!--content start-->
+                <div class="span9">
+                    {% block content %} 404 - страница не найдена{% endblock %}
+                    
+                    <hr />
+                    <footer>
+                        <p>{{ settings.footer }}</p>
+                    </footer>
+                </div>
+                <!--content end-->
+            </div>
+        </div>
+    </body>
+</html>
+{% endspaceless %}

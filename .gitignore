@@ -1,0 +1,8 @@
+*.pyc
+images/*
+logs.txt
+*.[jJ][pP][gG]
+*.[jJ][pP][eE][gG]
+*.[gG][iI][fF]
+*.[pP][nN][gG]
+

@@ -1,0 +1,26 @@
+{% if products %}
+    <table class="table table-striped">
+         <thead>
+            <tr>
+                <th>Фото</th>
+                <th>Краткое описание</th>
+                <th>Код</th>
+                <th>Цена</th>
+                <th>В наличии</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for product in products %}
+            <tr>
+                <td>photo</td>
+                <td>{{ product.desc }}</td>
+                <td>{{ product.id }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.status }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p class="text-error">По данному запросу ничего не найдено</p>
+{% endif %}

@@ -1,0 +1,80 @@
+ {% extends "base.html" %}
+ 
+ {% block content %}
+     {% if product %}
+         <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span2">
+                    
+                </div>
+                <div class="span10">
+                    <table class="table table-condensed table-bordered">
+                        {% if product.description %}
+                            <tr class="info">
+                                <td colspan="2">
+                                    <strong>{{ product.description }}</strong>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <td>Код товара:</td>
+                            <td>
+                                <strong>{{ product.id }}</strong>
+                            </td>
+                        </tr>
+                        {% if product.brand_title %}
+                            <tr>
+                                <td>Производитель:</td>
+                                <td>
+                                    {% if product.url %}
+                                        <a target="_blank" href="{{ product.url }}"><strong>{{ product.brand_title }}</strong></a>
+                                    {% else %}
+                                        <strong>{{ product.brand }}</strong>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% if product.garant %}
+                            <tr>
+                                <td>Гарантия:</td>
+                                <td>
+                                    {{ product.garant }} мес.
+                                </td>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <td>Цена:</td>
+                            <td>
+                                <strong><p class="text-info">{{ product.price }} грн.</p></strong>
+                            </td>
+                        </tr>
+                        {% if product.status %}
+                        <tr>
+                            <td>Статус:</td>
+                            <td>
+                                <p class="text-info">{{ product.status }}</p>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% if product.features %}
+            <div class="container-fluid">
+                <table class="table table-condensed table-bordered table-striped" >
+                    <tr class="success">
+                        <th colspan="2">
+                            <strong>Характеристики:</strong>
+                        </th>
+                    </tr>
+                    {% autoescape off %}
+                        {{ product.features }}
+                    {% endautoescape %}
+                </table>
+            </div>
+        {% endif %}
+    {% else %}
+        <p class="text-error">Продукт не найден</p>
+    {% endif %}
+ {% endblock %}
