@@ -11,7 +11,7 @@ def index(request):
 
 
 def category(request, id, page=0):
-#    all_sub = _get_subcategories(request, id, [])
+#    all_sub = _get_subcategories(id, [])
     products_list = _get_products(id, page)
     breadcrumbs = _breadcrumbs(id, [])
     
@@ -31,21 +31,24 @@ def product(request, id):
 
     
 def _get_products(id, page):
-    categories_list = _get_categories_id(request, id, [])
-
-    products = Product.objects.filter(category__in=categories_list).order_by('ord')[page:config.MAX_PRODUCTS]
-
-    return products
+    categories_list = _get_categories_id(id, [])
+    print 'aaaaaaa`'
+    print categories_list
+#    products = Product.objects.filter(category__in=categories_list).order_by('ord')[page:config.MAX_PRODUCTS]
     
-def _get_categories_id(id, data = []):
+#    return products
+    return []
+    
+def _get_categories_id(id, data=[]):
+    print id
     current = get_object_or_404(Category, pk=id)
-    
+
     if current.count_products:
         return [id,]
                
     else:
-        for subcategory in Category.objects.filter(parent=id, display=1)[:3]:
-            data.extend(_get_categories_id(request, subcategory.id, data))
+        for subcategory in Category.objects.filter(parent=id, display=1):
+            data.extend(_get_categories_id(subcategory.id, data))
     
     return data
 
@@ -61,7 +64,7 @@ def _breadcrumbs(id, data=[]):
     })
     
     if current.parent_id:
-        return _breadcrumbs(request, current.parent_id, data)
+        return _breadcrumbs(current.parent_id, data)
        
     return data
     

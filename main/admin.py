@@ -21,7 +21,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display_links = ('title',)
     list_filter = ('display','parent')
     search_fields = ('title',)
-    ordering = ['parent',]
+    ordering = ['parent', 'title']
     list_editable = ('display',)
     readonly_fields = ('id', 'parent', 'title', 'count_products','piture', 'ord', 'hide_pictures', 'updated')
     actions = None

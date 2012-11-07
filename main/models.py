@@ -30,6 +30,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = u'Категория'
         verbose_name_plural = u'Категории'
+        ordering = ['title']
         
     def __unicode__(self):
         return u"%s" % (self.title)
