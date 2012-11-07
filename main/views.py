@@ -29,10 +29,6 @@ def product(request, id):
     return render_to_response('main/product.html', {
     }, context_instance=RequestContext(request))
 
-
-#def _get_subcategories(request, id, data=[]):
-#    
-#    return
     
 def _get_products(id, page):
     categories_list = _get_categories_id(request, id, [])
