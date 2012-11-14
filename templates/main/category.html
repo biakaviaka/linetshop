@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load custom %}
-{% load media %}
  
 {% block content %}
-        <ul class="breadcrumb">
-            {% for breadcrumb in breadcrumbs %}
-                <li><a href="/category/{{ breadcrumb.id }}">{{ breadcrumb.title }}</a> <span class="divider">/</span></li>
-            {% endfor %}
-        </ul>
+    <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+            <li><a href="/category/{{ breadcrumb.id }}">{{ breadcrumb.title }}</a> <span class="divider">/</span></li>
+        {% endfor %}
+    </ul>
+    
     {% if products %}
         <table class="table table-striped table-hover table-bordered">
              <thead>
@@ -19,7 +19,7 @@
                 </tr>
             </thead>
             <tbody>
-            {% for product in products %}
+            {% for product in products.object_list %}
                 <tr>
                     <td>{{ product.id }}</td>
                     <td><a href="/product/{{ product.id }}">{% firstof product.new_description  product.description %}</a></td>
@@ -29,13 +29,52 @@
             {% endfor %}
             </tbody>
         </table>
+        
+        <!-- Pagination  -->
+        <div class="pagination pagination-centered pagination-small">
+            <ul>
+                {% if products.has_previous %}
+                    <li><a href= "/category/{{ id }}/{{ products.previous_page_number }}"><<</a></li>
+                {% endif %}
+                
+                {% if first %}
+                    <li><a href="/category/{{ id }}/{{ first }}">{{ first }}</a></li>
+                    <li class="disabled"><a href="#">...</a></li>
+                {% endif %}
+                    
+                {% for page in range %}
+                    {% ifequal page products.number %}
+                        <li class="active"><a href="/category/{{ id }}/{{ page }}">{{ page }}</a></li>
+                    {% else %}
+                        <li><a href="/category/{{ id }}/{{ page }}">{{ page }}</a></li>
+                    {% endifequal %}
+                {% endfor %}
+                
+                {% if last %}
+                    <li class="disabled"><a href="#">...</a></li>
+                    <li><a href="/category/{{ id }}/{{ last }}">{{ last }}</a></li>
+                {% endif %}
+                
+                {% if products.has_next %}
+                    <li><a href="/category/{{ id }}/{{ products.next_page_number }}">>></a></li>
+                {% endif %}  
+            </ul>
+        </div>
     {% else %}
         <p class="text-error">По данному запросу ничего не найдено</p>
     {% endif %}
+    
 {% endblock %}
 
-{% block extra %}
-    <script type="text/javascript" src="{% media "categories.js" "no-timestamp" %}"></script>
+{% block sidemenu %}
+    {% autoescape off %}
+        {% for category in categories %}
+            <li><a href="/category/{{ category.id }}">{% firstof category.new_title category.title %}</a></li>
+            {% if category.id == main_parent %}
+                {{ subcategories }}
+            {% endif %}
+        {% endfor %}
+    {% endautoescape %}
 {% endblock %}
 
 

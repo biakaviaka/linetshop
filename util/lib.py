@@ -34,5 +34,9 @@ def _response_json(data, fields=[]):
 def _calculate_percent(num, percent):
     return round(num + (( num * percent ) / 100), 2)
     
+def _calculate_price(num, percent):
+    
+    pass
+    
 
 

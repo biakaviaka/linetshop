@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^$', index, name='index'),
     url(r'^index/$', index, name='index'),
     url(r'^category/(?P<id>\d+)/$', category, name='category'),
+    url(r'^category/(?P<id>\d+)/(?P<page>\d+)/$', category, name='category'),
     url(r'^product/(?P<id>\d+)/$', product, name='product'),
 )
 

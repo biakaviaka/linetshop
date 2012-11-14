@@ -8,4 +8,6 @@ def multiply(value, arg=1):
         value = round(value * arg)
     except (TypeError, ValueError):
         pass
+        
+    
     return value
