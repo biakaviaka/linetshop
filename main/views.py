@@ -9,17 +9,24 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
 
 def index(request):
+        
+    
     return render_to_response('main/index.html', {
     }, context_instance=RequestContext(request))
 
 
 def category(request, id, page = 1):
     breadcrumbs = _breadcrumbs(id, [])
-    categories_list = _get_categories_id(id, [])
-    main_parent = _get_main_category(id)
-    subcategories_list = _get_subcategories(breadcrumbs, '')
+    categories_list_with_products = _get_categories_id(id, [])
+    
+    categories_list = []
+    for category in breadcrumbs:
+        categories_list.append(category['id'])
+    
+    categories_list.reverse()
+    sidemenu = _build_sidemenu(categories_list)
 
-    products_query = Product.objects.filter(category__in=categories_list).order_by('ord')
+    products_query = Product.objects.filter(category__in=categories_list_with_products).order_by('ord')
     
     paginator = Paginator(products_query, config.MAX_PRODUCTS)
     
@@ -60,8 +67,7 @@ def category(request, id, page = 1):
     
     return render_to_response('main/category.html', {
         'breadcrumbs' : breadcrumbs,
-        'subcategories' : subcategories_list,
-        'main_parent' : main_parent,
+        'sidemenu' : sidemenu,
         'products' : products,
         'id' : id,
         'range' : paginator_range,
@@ -72,7 +78,15 @@ def category(request, id, page = 1):
 
 def product(request, id):
     product = Product.objects.get(pk=id)
+    
     breadcrumbs = _breadcrumbs(product.category_id, [])
+    
+    categories_list = []
+    for category in breadcrumbs:
+        categories_list.append(category['id'])
+    
+    categories_list.reverse()
+    sidemenu = _build_sidemenu(categories_list)
     
     if product:
         if product.new_price:
@@ -93,6 +107,7 @@ def product(request, id):
         
     return render_to_response('main/product.html', {
         'product' : product,
+        'sidemenu' : sidemenu,
         'breadcrumbs' : breadcrumbs,
     }, context_instance=RequestContext(request))
     
@@ -125,55 +140,49 @@ def _breadcrumbs(id, data=[]):
        
     return data
 
-def _get_subcategories(category_list, data = ''):
-    for cat in Category.objects.filter(parent=None):
-        try:
-            subcats = Category.objects.filter(parent=cat.pk, pk__in=[bc['id'] for bc in category_list])
-            print subcats
-        except Category.DoesNotExist:
-            continue
+
+def _build_sidemenu(categories_list, data = '', parent_id = None):
+
+    if len(categories_list):
+        id = categories_list.pop()
+    else:
+        id = -1
+
+    current_categories = Category.objects.filter(parent = parent_id, display = 1).order_by('ord')
+
+    data += '<ul>'  
+    for category in current_categories:
+        if category.new_title:
+            category.title = category.new_title
         
-#        data = _build_html_list(data, url = 'category')
-
-    return data
-    
-#def _get_subcategories(cat_list, data = ''):
-#    for category in cat_list:
-#        last_id = category['id']
-#        curr_subs = Category.objects.filter(parent = category['id'], display = 1)
-#        data += _build_html_list(curr_subs)
-#       
-#    last_cat = get_object_or_404(Category, pk=last_id)
-
-#    if last_cat.count_products:
-#        products = Product.objects.filter(category=last_id, display=1)
-#        data += _build_html_list(products, url = 'product')     
-#        
-#    return data
-
-def _build_html_list(data, url = 'category'):
-    ul_list = '<ul>'
-    
-    for item in data:
-        if item.new_title:
-            item.title = item.new_title
+        if not category.title:
+            continue
             
-        if not item.title:
-            continue
-              
-        ul_list += '<li><a href="/' + url + '/' + str(item.id) + '">' + item.title + '</a></li>'
+        data += '<li><a href="/category/' + str(category.id) + '">' + category.title + '</a></li>'
         
-    ul_list += '</ul>'
-    
-    return ul_list
-    
-def _get_main_category(id):
-    current = get_object_or_404(Category, pk=id)
-    
-    if current.parent_id:
-        return _get_main_category(current.parent_id)
+        if category.id == id:
+            if category.count_products:    
+                products = Product.objects.filter(category=id, display=1).order_by('ord')
+                data += '<ul>'
+                
+                for product in products:
+                    if product.new_title:
+                        product.title = product.new_title
         
-    return current.id
+                    if not product.title:
+                        continue
+                
+                    data += '<li><a href="/product/' + str(product.id) + '">' + product.title + '</a></li>'
+                    
+                data += '</ul>'
+            
+            else:
+                data += _build_sidemenu(categories_list, '', id)
+            
+    data += '</ul>' 
+    
+    return data      
+    
         
     
     

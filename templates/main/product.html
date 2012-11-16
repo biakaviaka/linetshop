@@ -88,3 +88,9 @@
         <p class="text-error">Продукт не найден</p>
     {% endif %}
  {% endblock %}
+ 
+ {% block sidemenu %}
+    {% autoescape off %}
+        {{ sidemenu }}
+    {% endautoescape %}
+{% endblock %}

@@ -17,7 +17,7 @@ class Brand(models.Model):
 
 
 class Category(models.Model):
-    parent = models.ForeignKey('self', null=True, blank=True, related_name='subcategories', verbose_name=u'Родительская категория')
+    parent = models.ForeignKey('self', blank=True, null=True, related_name='subcategories', verbose_name=u'Родительская категория')
     title = models.CharField(max_length=255, null=True, blank=True, verbose_name=u'Название (оригинал)')
     new_title = models.CharField(max_length=255, null=True, blank=True, verbose_name=u'Название')
     piture = models.CharField(max_length=255, null=True, blank=True, verbose_name=u'Picture')

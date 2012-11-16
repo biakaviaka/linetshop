@@ -68,12 +68,7 @@
 
 {% block sidemenu %}
     {% autoescape off %}
-        {% for category in categories %}
-            <li><a href="/category/{{ category.id }}">{% firstof category.new_title category.title %}</a></li>
-            {% if category.id == main_parent %}
-                {{ subcategories }}
-            {% endif %}
-        {% endfor %}
+        {{ sidemenu }}
     {% endautoescape %}
 {% endblock %}
 
