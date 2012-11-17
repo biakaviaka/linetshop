@@ -3,8 +3,8 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Oct 27, 2012 at 09:05 AM
--- Server version: 5.5.27
+-- Generation Time: Nov 16, 2012 at 07:08 PM
+-- Server version: 5.5.28
 -- PHP Version: 5.4.6-1ubuntu1
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `linetshop`
+-- Database: `linetshop2`
 --
 
 -- --------------------------------------------------------
@@ -34,14 +34,14 @@ CREATE TABLE IF NOT EXISTS `main_brand` (
   `new_url` varchar(255) DEFAULT NULL,
   `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `main_category`
 --
+
 CREATE TABLE IF NOT EXISTS `main_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) DEFAULT NULL,
@@ -51,12 +51,11 @@ CREATE TABLE IF NOT EXISTS `main_category` (
   `count_products` int(11) DEFAULT NULL,
   `ord` int(11) DEFAULT NULL,
   `hide_pictures` int(11) DEFAULT NULL,
-  `display` tinyint(1) NOT NULL DEFAULT '1',
+  `display` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1',
   `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `main_category_63f17a16` (`parent_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -114,10 +113,23 @@ CREATE TABLE IF NOT EXISTS `main_product` (
   UNIQUE KEY `source` (`source`),
   KEY `main_product_42dc49bc` (`category_id`),
   KEY `main_product_74876276` (`brand_id`),
-  KEY `main_product_44224078` (`status_id`),
-  KEY `main_product_41f657b3` (`currency_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5000;
--- --------------------------------------------------------
+  KEY `main_product_44224078` (`status`),
+  KEY `main_product_41f657b3` (`currency`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=50000 ;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `main_category`
+--
+ALTER TABLE `main_category`
+  ADD CONSTRAINT `parent_id_refs_id_4a3cf3b3` FOREIGN KEY (`parent_id`) REFERENCES `main_category` (`id`);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
 --
 -- Table structure for table `main_settings`
@@ -133,6 +145,7 @@ CREATE TABLE IF NOT EXISTS `main_settings` (
   `phone` varchar(255) DEFAULT NULL,
   `fax` varchar(255) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
+  `footer` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
@@ -140,8 +153,8 @@ CREATE TABLE IF NOT EXISTS `main_settings` (
 -- Dumping data for table `main_settings`
 --
 
-INSERT INTO `main_settings` (`id`, `title`, `description`, `keywords`, `favicon`, `email`, `phone`, `fax`, `address`) VALUES
-(1, 'Linet Shop', 'Продажа всякого барахла', 'Лептоп, Компьютер, Принтер', '', 'wikitorya@gmail.com', '(+456) 94-09-445', '(+456) 94-09-444', 'ул. Койкого, 35 г. Запорожье');
+INSERT INTO `main_settings` (`id`, `title`, `description`, `keywords`, `favicon`, `email`, `phone`, `fax`, `address`, `footer`) VALUES
+(1, 'Linet Shop', 'Продажа всякого барахла', 'Лептоп, Компьютер, Принтер', '', 'wikitorya@gmail.com', 'Заказ и консультация:  (+456) 94-09-445', '(+456) 94-09-444', 'ул. Койкого, 35 г. Запорожье', 'Авторские права Linet © 2012');
 
 -- --------------------------------------------------------
 
@@ -161,35 +174,12 @@ CREATE TABLE IF NOT EXISTS `main_status` (
 --
 
 INSERT INTO `main_status` (`id`, `title`, `short_title`) VALUES
-(1, 'Товар недоступен', 'Нет'),
-(2, 'Товар есть в наличии', 'Есть'),
-(3, 'Есть в наличии, в резерве', 'В резерве'),
-(4, 'Ожидается поступление', 'Ожидается'),
-(5, 'Товар доступен под заказ', 'Под заказ'),
+(1, 'Товар есть в наличии', 'Есть'),
+(2, 'Есть в наличии, в резерве', 'В резерве'),
+(3, 'Ожидается поступление', 'Ожидается'),
+(4, 'Товар доступен под заказ', 'Под заказ'),
+(5, '', ''),
 (6, '', ''),
 (7, '', ''),
-(8, '', ''),
-(9, 'Нет в наличии, уточняйте доступность у менеджера', 'Нет');
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `main_category`
---
-ALTER TABLE `main_category`
-  ADD CONSTRAINT `parent_id_refs_id_4a3cf3b3` FOREIGN KEY (`parent_id`) REFERENCES `main_category` (`id`);
-
---
--- Constraints for table `main_product`
---
-ALTER TABLE `main_product`
-  ADD CONSTRAINT `brand_id_refs_id_2dac6de5` FOREIGN KEY (`brand_id`) REFERENCES `main_brand` (`id`),
-  ADD CONSTRAINT `category_id_refs_id_7095e957` FOREIGN KEY (`category_id`) REFERENCES `main_category` (`id`),
-  ADD CONSTRAINT `currency_id_refs_id_6edb72b4` FOREIGN KEY (`currency_id`) REFERENCES `main_paytype` (`id`),
-  ADD CONSTRAINT `status_id_refs_id_4d6da36b` FOREIGN KEY (`status_id`) REFERENCES `main_status` (`id`);
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+(8, 'Нет в наличии, уточняйте доступность у менеджера', 'Нет'),
+(9, 'Товар недоступен', 'Нет');
