@@ -18,19 +18,36 @@ class MicrotronParserExtra(Parser, Database):
         
         img_src = self.host + source + str(cat) + '/pic_' + str(id) + '_' + str(mtstamp) + '.jpg'
         img_dest = dest + '/pic_' + str(id) + '.jpg'
-        print img_dest       
+               
         urllib.urlretrieve(img_src, img_dest)
         
+        
+    def get_full_path(self, id, data=[]):
+        current = cursor.execute('SELECT * FROM `main_product` WHERE `source` = %s' , (id) )
+        
+        data.insert(0, current.id)
+        
+        if current.parent_id:
+            return _breadcrumbs(current.parent_id, data)
+           
+        return data
+       
 
-
-    def save_description(self, id):   
+    def save_description(self, cursor, id):   
         regex = re.compile("\d+~~~~~~([\W\w]+)~~~")
         
         description_tbl = Parser.getNeedle(self, self.host + 'descriptions/' + str(id), '', regex)
-        print id
+        
+        if len(description_tbl) > 0:
+            features = description_tbl[0]
+            
+        else:
+            features = ''
+            
+        print len(description_tbl) 
+        
         try:
-            cursor.execute('UPDATE `main_product` SET `features` = %s WHERE `source` = %s', (description_tbl, id))
-            Database.connection.commit()
+            cursor.execute('UPDATE `main_product` SET `features` = %s WHERE `source` = %s', (features, id))
         
         except MySQLdb.Error, e:
             Parser.log.save_log("Error %d: %s" % (e.args[0], e.args[1]), u'critical')
@@ -51,7 +68,7 @@ class MicrotronParserExtra(Parser, Database):
             if product[1]:
                 self.save_img(product[0], product[2])
                 
-            self.save_description(product[0]);   
+            self.save_description(cursor, product[0]);   
     
     
 

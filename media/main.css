@@ -52,35 +52,25 @@ ul.breadcrumb {
     height: 20px;
 }
 
-/*
-.carousel img {
-    padding: 10px;
-}
-.carousel .media-heading {
-    padding-right: 50px;
-}
-.carousel.well {
-    background-color: white;
-}
-.carousel h3{
-    line-height: 25px;
-    vertical-align: middle;
+
+/* description table */
+table.ware {
+    border-collapse: collapse;
+    margin-top: 12px;
+    width: 100%;
 }
 
-.div_relative {
-    position: relative;
+.wbck {
+    background-color: #CCE3EF;
+    color: black;
+    text-align: center;
 }
-.carousel .div_relative h3, .carousel .div_relative  a {
-    position: absolute;
-    bottom: 0;
+
+.ware td, .ware th {
+    border: 1px solid #A0CDEE;
+    padding: 2px 4px;
+    vertical-align: middle;
 }
-.carousel .div_relative h3 {
-    left: 280px;
-}
-.carousel .div_relative  a {
-    right: 50px;
-}
-*/
 
 
 
