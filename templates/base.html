@@ -64,15 +64,14 @@
                 <!--content start-->
                 <div class="span9">
                     {% block content %}{% endblock %}
-                    
-                    <hr />
-                    <footer>
-                        <p>{{ settings.footer }}</p>
-                    </footer>
                 </div>
                 <!--content end-->
             </div>
         </div>
+        <hr />
+        <footer>
+            <p class="">{{ settings.footer }}</p>
+        </footer>
     </body>
 </html>
 {% endspaceless %}

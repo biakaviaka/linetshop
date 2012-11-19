@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import redirect, render_to_response, get_object_or_404
 from django.template import loader, RequestContext, Context
 from django.conf import settings
@@ -8,11 +9,27 @@ from util.lib import _calculate_percent
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
 
+
+
 def index(request):
-        
+    products = Product.objects.filter(display=1, bestseller=1, status__in=[1,3,4,]).order_by('ord')
     
+    for product in products:
+        if product.new_title:
+            product.title = product.new_title
+            
+        if product.new_price:
+            product.price = _calculate_percent(product.price, product.new_price)
+            
+        product.image = _get_img_path(product, 'preview')
+
     return render_to_response('main/index.html', {
+        'products' : products,
     }, context_instance=RequestContext(request))
+    
+
+
+
 
 
 def category(request, id, page = 1):
@@ -181,7 +198,24 @@ def _build_sidemenu(categories_list, data = '', parent_id = None):
             
     data += '</ul>' 
     
-    return data      
+    return data
+    
+    
+def _get_img_path(product, view = ''):
+    full_path = settings.MEDIA_ROOT + '/images/products/'
+    short_path = settings.MEDIA_URL + 'images/products/'  
+    default_img = settings.MEDIA_URL + 'images/' + 'site/default_' + view + '.jpg'
+    
+    folder = str(int(int(product.id) / 1000)) + '/'
+    image = view + '_' + str(product.id) + '.jpg'
+    
+    if os.path.isfile(full_path + folder + image):
+        path = short_path + folder + image
+    
+    else:
+        path = default_img
+
+    return path   
     
         
     

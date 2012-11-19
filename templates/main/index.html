@@ -1,4 +1,17 @@
 {% extends "base.html" %}
+{% load custom %}
 
 {% block content %}
+    {% for product in products %}
+        {% cycle '<ul class="thumbnails">' '' '' %}
+            <li class="span4">
+                <div class="thumbnail">
+                    <img alt="{{ product.title }}" scr="{{ product.image }}" class="img-rounded" />
+                    <h3 class="text-success">{{ product.price|multiply:paytype.rate_usd }} грн.</h3>
+                    <p>{{ product.description }}</p>
+                    <a class="btn btn-large btn-primary" href="/product/{{ product.id }}">Подробнее</a>
+                </div>
+            </li>
+        {% cycle '' '' '</ul>' %}
+    {% endfor %}
 {% endblock %}
