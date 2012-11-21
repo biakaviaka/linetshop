@@ -76,7 +76,27 @@ table.ware {
     height: 200px;
 }
 
+/* index page */
+a.no_decor {
+    text-decoration: none;
+    color: black;      
+}
 
+.thumbnails a {
+    margin: 1px;
+    padding: 5px;
+}
+
+.thumbnails a h3 {
+    padding-left: 250px;
+}
+
+.thumbnails .thumbnail_img {
+    width: 250px;
+    height: 200px;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
 
 
 

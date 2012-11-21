@@ -21,7 +21,7 @@ def index(request):
         if product.new_price:
             product.price = _calculate_percent(product.price, product.new_price)
             
-        product.image = _get_img_path(product, 'preview')
+        product.image = _get_img_path(product)
 
     return render_to_response('main/index.html', {
         'products' : products,
@@ -201,7 +201,7 @@ def _build_sidemenu(categories_list, data = '', parent_id = None):
     return data
     
     
-def _get_img_path(product, view = ''):
+def _get_img_path(product, view = 'pic'):
     full_path = settings.MEDIA_ROOT + '/images/products/'
     short_path = settings.MEDIA_URL + 'images/products/'  
     default_img = settings.MEDIA_URL + 'images/' + 'site/default_' + view + '.jpg'
