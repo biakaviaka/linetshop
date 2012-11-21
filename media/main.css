@@ -16,6 +16,9 @@ body {
     text-align: center;
 }
 
+footer p {
+    text-align: center;    
+}
 
 /* top navigation menu */
 #menu_info {

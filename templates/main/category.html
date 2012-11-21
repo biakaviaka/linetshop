@@ -12,6 +12,7 @@
         <table class="table table-striped table-hover table-bordered">
              <thead>
                 <tr>
+                    <th></th>
                     <th>Код</th>
                     <th>Краткое описание</th>
                     <th>Цена</th>
@@ -21,6 +22,7 @@
             <tbody>
             {% for product in products.object_list %}
                 <tr>
+                    <td>{{ product.image }}</td>
                     <td>{{ product.id }}</td>
                     <td><a href="/product/{{ product.id }}">{% firstof product.new_description  product.description %}</a></td>
                     <td class="text-success">{{ product.price|multiply:paytype.rate_usd }} грн.</td>

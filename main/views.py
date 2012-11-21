@@ -9,8 +9,6 @@ from util.lib import _calculate_percent
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
 
-
-
 def index(request):
     products = Product.objects.filter(display=1, bestseller=1, status__in=[1,3,4,]).order_by('ord')
     
@@ -26,11 +24,6 @@ def index(request):
     return render_to_response('main/index.html', {
         'products' : products,
     }, context_instance=RequestContext(request))
-    
-
-
-
-
 
 def category(request, id, page = 1):
     breadcrumbs = _breadcrumbs(id, [])
@@ -43,7 +36,7 @@ def category(request, id, page = 1):
     categories_list.reverse()
     sidemenu = _build_sidemenu(categories_list)
 
-    products_query = Product.objects.filter(category__in=categories_list_with_products).order_by('ord')
+    products_query = Product.objects.filter(display=1, status__in=[1,3,4,], category__in=categories_list_with_products).order_by('ord')
     
     paginator = Paginator(products_query, config.MAX_PRODUCTS)
     
@@ -93,8 +86,12 @@ def category(request, id, page = 1):
     }, context_instance=RequestContext(request))
 
 
+
+
+
+
 def product(request, id):
-    product = Product.objects.get(pk=id)
+    product = get_object_or_404(Product, pk=id, display=1, status__in=[1,3,4,])
     
     breadcrumbs = _breadcrumbs(product.category_id, [])
     
