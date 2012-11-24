@@ -95,8 +95,31 @@ a.no_decor {
 }
 
 .thumbnail_img {
-    width: 250px;
-    height: 200px;
+    width: 250px !important;
+    height: 200px !important;
     background-position: center center;
     background-repeat: no-repeat;
 }
+
+.nav ul {
+    list-style-type: none;
+}
+
+.nav ul.nav_product {
+    font-size: 12px;
+    line-height: 12px;
+    vertical-align: middle;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -51,10 +51,15 @@ def product(request, id):
             
         if product.new_features:
             product.features = product.new_features
-        
-        brand = Brand.objects.get(pk=product.brand_id)
-        product.brand_title = brand.new_title or brand.title
-        product.url = brand.new_url or brand.url
+            
+        if product.brand_id is not None:
+            brand = Brand.objects.get(pk=product.brand_id)
+            product.brand_title = brand.new_title or brand.title
+            product.url = brand.new_url or brand.url
+        else:
+            product.brand_title = ''
+            product.url = ''
+            
         product.image = _get_img_path(product)
         
     return render_to_response('main/product.html', {
@@ -112,9 +117,9 @@ def category(request, id, page = 1):
     paginator_range = range(range_first, range_last + 1)
 
     #TODO add new price calculation  
-#    for product in products.object_list
-#        if product.new_price:
-#            product.price = _calculate_percent(product.price, product.new_price)
+    #for product in products
+        #if product.new_price:
+            #product.price = _calculate_percent(product.price, product.new_price)
     
     return render_to_response('main/category.html', {
         'breadcrumbs' : breadcrumbs,
@@ -185,7 +190,7 @@ def _build_sidemenu(categories_list, data = '', parent_id = None):
         if category.id == id:
             if category.count_products:    
                 products = Product.objects.filter(category=id, display=1, status__in=[1,3,4,]).order_by('ord')
-                data += '<ul>'
+                data += '<ul class="nav_product">'
                 
                 for product in products:
                     if product.new_title:

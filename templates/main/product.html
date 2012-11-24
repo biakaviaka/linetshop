@@ -7,9 +7,6 @@
         {% for breadcrumb in breadcrumbs %}
             <li><a href="/category/{{ breadcrumb.id }}">{{ breadcrumb.title }}</a> <span class="divider">/</span></li>
         {% endfor %}
-        {% if product.title %}
-            <li><a href="/product/{{ product.id }}">{{ product.title }}</a></li>
-        {% endif %}
     </ul>
     {% if product %}
          <div class="container-fluid">
