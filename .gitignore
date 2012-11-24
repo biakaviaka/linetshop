@@ -1,9 +1,4 @@
 *.pyc
-images/*
 logs.txt
-temp/*
-*.[jJ][pP][gG]
-*.[jJ][pP][eE][gG]
-*.[gG][iI][fF]
-*.[pP][nN][gG]
+media/images/products/*
 
