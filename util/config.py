@@ -4,8 +4,8 @@ ADMIN_NAME = 'thoria'
 ADMIN_EMAIL = 'wikitorya@gmail.com'
 
 HOSTNAME = 'localhost'
-USER = 'root'
-PASSWD = '30may83'
-DB = 'linetshop2'
+USER = 'thoria'
+PASSWD = 'univer'
+DB = 'linetshop'
 
 MAX_PRODUCTS = 30

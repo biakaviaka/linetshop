@@ -25,6 +25,47 @@ def index(request):
         'products' : products,
     }, context_instance=RequestContext(request))
 
+
+
+def product(request, id):
+    product = get_object_or_404(Product, pk=id, display=1, status__in=[1,3,4,])
+    
+    breadcrumbs = _breadcrumbs(product.category_id, [])
+    
+    categories_list = []
+    for category in breadcrumbs:
+        categories_list.append(category['id'])
+    
+    categories_list.reverse()
+    sidemenu = _build_sidemenu(categories_list)
+    
+    if product:
+        if product.new_price:
+            product.price = _calculate_percent(product.price, product.new_price)
+        
+        if product.new_title:
+            product.title = product.new_title
+        
+        if product.new_description:
+            product.description = product.new_description
+            
+        if product.new_features:
+            product.features = product.new_features
+        
+        brand = Brand.objects.get(pk=product.brand_id)
+        product.brand_title = brand.new_title or brand.title
+        product.url = brand.new_url or brand.url
+        product.image = _get_img_path(product)
+        
+    return render_to_response('main/product.html', {
+        'product' : product,
+        'sidemenu' : sidemenu,
+        'breadcrumbs' : breadcrumbs,
+    }, context_instance=RequestContext(request))
+    
+    
+    
+
 def category(request, id, page = 1):
     breadcrumbs = _breadcrumbs(id, [])
     categories_list_with_products = _get_categories_id(id, [])
@@ -90,40 +131,7 @@ def category(request, id, page = 1):
 
 
 
-def product(request, id):
-    product = get_object_or_404(Product, pk=id, display=1, status__in=[1,3,4,])
-    
-    breadcrumbs = _breadcrumbs(product.category_id, [])
-    
-    categories_list = []
-    for category in breadcrumbs:
-        categories_list.append(category['id'])
-    
-    categories_list.reverse()
-    sidemenu = _build_sidemenu(categories_list)
-    
-    if product:
-        if product.new_price:
-            product.price = _calculate_percent(product.price, product.new_price)
-        
-        if product.new_title:
-            product.title = product.new_title
-        
-        if product.new_description:
-            product.description = product.new_description
-            
-        if product.new_features:
-            product.features = product.new_features
-        
-        brand = Brand.objects.get(pk=product.brand_id)
-        product.brand_title = brand.new_title or brand.title
-        product.url = brand.new_url or brand.url
-        
-    return render_to_response('main/product.html', {
-        'product' : product,
-        'sidemenu' : sidemenu,
-        'breadcrumbs' : breadcrumbs,
-    }, context_instance=RequestContext(request))
+
     
 def _get_categories_id(id, data=[]):
     current = get_object_or_404(Category, pk=id)
@@ -176,7 +184,7 @@ def _build_sidemenu(categories_list, data = '', parent_id = None):
         
         if category.id == id:
             if category.count_products:    
-                products = Product.objects.filter(category=id, display=1).order_by('ord')
+                products = Product.objects.filter(category=id, display=1, status__in=[1,3,4,]).order_by('ord')
                 data += '<ul>'
                 
                 for product in products:
@@ -203,7 +211,7 @@ def _get_img_path(product, view = 'pic'):
     short_path = settings.MEDIA_URL + 'images/products/'  
     default_img = settings.MEDIA_URL + 'images/' + 'site/default_' + view + '.jpg'
     
-    folder = str(int(int(product.id) / 1000)) + '/'
+    folder = str(int(int(product.id) / 1000)) + '/' + str(int(int(product.id) / 100)) + '/'
     image = view + '_' + str(product.id) + '.jpg'
     
     if os.path.isfile(full_path + folder + image):

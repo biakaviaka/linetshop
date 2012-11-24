@@ -95,6 +95,7 @@ class Parser:
         try:
             request = urllib2.Request(host, params, headers)
             response = urllib2.urlopen(request)
+            
             data = response.read().decode('WINDOWS-1251').encode('UTF-8')                     
             
         except IOError as e:

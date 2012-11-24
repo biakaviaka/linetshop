@@ -7,30 +7,26 @@ from util.lib_parser import *
 class MicrotronParserExtra(Parser, Database):
     host = 'http://www.microtron.zp.ua/' 
     
-    def save_img(self, id, mtstamp):
+    def save_img(self, id, source_id, mtstamp):
         source = 'pictures/products_pictures/'
-        dest = 'images/products'
-        
-        cat = int(int(id) / 1000)
+        dest = 'media/images/products/'
+
+        cat = int(int(source_id) / 1000)
+        folder = str(int(int(id) / 1000)) + '/' + str(int(int(id) / 100)) + '/'
+        dest = dest + folder
         
         if not os.path.exists(dest):
             os.makedirs(dest)
-        
-        img_src = self.host + source + str(cat) + '/pic_' + str(id) + '_' + str(mtstamp) + '.jpg'
-        img_dest = dest + '/pic_' + str(id) + '.jpg'
+
+        img_src = self.host + source + str(cat) + '/pic_' + str(source_id) + '_' + str(mtstamp) + '.jpg'
+        img_src2 = self.host + source + str(cat) + '/picpreview_' + str(source_id) + '_' + str(mtstamp) + '.jpg'
+        img_dest = dest + 'pic_' + str(id) + '.jpg'
+        img_dest2 = dest + 'preview_' + str(id) + '.jpg'
                
         urllib.urlretrieve(img_src, img_dest)
+        urllib.urlretrieve(img_src2, img_dest2)
         
-        
-    def get_full_path(self, id, data=[]):
-        current = cursor.execute('SELECT * FROM `main_product` WHERE `source` = %s' , (id) )
-        
-        data.insert(0, current.id)
-        
-        if current.parent_id:
-            return _breadcrumbs(current.parent_id, data)
-           
-        return data
+        print img_dest
        
 
     def save_description(self, cursor, id):   
@@ -61,14 +57,14 @@ class MicrotronParserExtra(Parser, Database):
         cursor = Database.connection(self)
         
         cursor.execute('SET NAMES `utf8`')
-        cursor.execute('SELECT `source`, `photo`, `mtstamp` FROM `main_product` WHERE display = 1')
+        cursor.execute('SELECT `id`, `source`, `photo`, `mtstamp` FROM `main_product` WHERE display = 1 AND status IN (1,3,4)')
         products = cursor.fetchall()
         
         for product in products:
-            if product[1]:
-                self.save_img(product[0], product[2])
+            if product[2]:
+                self.save_img(product[0], product[1], product[3])
                 
-            self.save_description(cursor, product[0]);   
+            self.save_description(cursor, product[1]);   
     
     
 

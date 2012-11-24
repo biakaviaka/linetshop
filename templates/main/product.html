@@ -14,10 +14,10 @@
     {% if product %}
          <div class="container-fluid">
             <div class="row-fluid">
-                <div class="span2">
-                    
-                </div>
-                <div class="span10">
+                {% if product.description %}
+                <div class="thumbnail_img span4" style="background-image:url({{ product.image }})"></div>
+                {% endif %}
+                <div class="span8">
                     <table class="table table-condensed table-bordered">
                         {% if product.description %}
                             <tr class="info">
@@ -58,14 +58,12 @@
                                 <strong><p class="text-info">{{ product.price|multiply:paytype.rate_usd }} грн.</p></strong>
                             </td>
                         </tr>
-                        {% if product.status %}
                         <tr>
                             <td>Статус:</td>
                             <td>
                                 <p class="text-info">{{ product.status }}</p>
                             </td>
                         </tr>
-                        {% endif %}
                     </table>
                 </div>
             </div>
@@ -73,11 +71,6 @@
         {% if product.features %}
             <div class="container-fluid">
                 <table class="table table-condensed table-bordered table-striped" >
-                    <tr class="success">
-                        <th colspan="2">
-                            <strong>Характеристики:</strong>
-                        </th>
-                    </tr>
                     {% autoescape off %}
                         {{ product.features }}
                     {% endautoescape %}
