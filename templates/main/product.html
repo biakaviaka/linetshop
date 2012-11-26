@@ -12,7 +12,8 @@
          <div class="container-fluid">
             <div class="row-fluid">
                 {% if product.description %}
-                <div class="thumbnail_img span4" style="background-image:url({{ product.image }})"></div>
+<!--                 <div class="thumbnail_img span4" style="background-image:url({{ product.image }})"></div> -->
+                    <img class="span4" src="{{ product.image }}" height="{{ product.height }}" width="{{ product.width }}" />
                 {% endif %}
                 <div class="span8">
                     <table class="table table-condensed table-bordered">

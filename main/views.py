@@ -5,6 +5,7 @@ from django.conf import settings
 from models import *
 from util import config
 from util.lib import _calculate_percent
+from PIL import Image
 
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
@@ -19,13 +20,15 @@ def index(request):
         if product.new_price:
             product.price = _calculate_percent(product.price, product.new_price)
             
-        product.image = _get_img_path(product)
+        image = _get_img_path(product)
+        
+        product.image = image[0]
+        product.height = image[1]
+        product.width = image[2]
 
     return render_to_response('main/index.html', {
         'products' : products,
     }, context_instance=RequestContext(request))
-
-
 
 def product(request, id):
     product = get_object_or_404(Product, pk=id, display=1, status__in=[1,3,4,])
@@ -60,7 +63,11 @@ def product(request, id):
             product.brand_title = ''
             product.url = ''
             
-        product.image = _get_img_path(product)
+        image = _get_img_path(product)
+        
+        product.image = image[0]
+        product.height = image[1]
+        product.width = image[2]
         
     return render_to_response('main/product.html', {
         'product' : product,
@@ -215,17 +222,25 @@ def _get_img_path(product, view = 'pic'):
     full_path = settings.MEDIA_ROOT + '/images/products/'
     short_path = settings.MEDIA_URL + 'images/products/'  
     default_img = settings.MEDIA_URL + 'images/' + 'site/default_' + view + '.jpg'
+    height = width = 0
     
     folder = str(int(int(product.id) / 1000)) + '/' + str(int(int(product.id) / 100)) + '/'
     image = view + '_' + str(product.id) + '.jpg'
     
     if os.path.isfile(full_path + folder + image):
         path = short_path + folder + image
+        img = Image.open(full_path + folder + image)
+        width, height = img.size
     
     else:
         path = default_img
+        
+    if not height or not width:
+        path = default_img
+        height = width = 250
+    
 
-    return path   
+    return [path, height, width]   
     
         
     
