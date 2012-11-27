@@ -11,11 +11,11 @@
     {% if product %}
          <div class="container-fluid">
             <div class="row-fluid">
-                {% if product.description %}
+                <div class="span3">
 <!--                 <div class="thumbnail_img span4" style="background-image:url({{ product.image }})"></div> -->
-                    <img class="span4" src="{{ product.image }}" height="{{ product.height }}" width="{{ product.width }}" />
-                {% endif %}
-                <div class="span8">
+                    <img src="{{ product.image }}" height="{{ product.height }}" width="{{ product.width }}" />
+                </div>
+                <div class="span9">
                     <table class="table table-condensed table-bordered">
                         {% if product.description %}
                             <tr class="info">
