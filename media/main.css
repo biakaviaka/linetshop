@@ -94,12 +94,12 @@ a.no_decor {
     padding-left: 250px;
 }
 
-/*.thumbnail_img {
+.thumbnail_img {
     width: 250px !important;
-    height: 250px !important;
+    height: 200px !important;
     background-position: center center;
     background-repeat: no-repeat;
-}*/
+}
 
 .nav ul {
     list-style-type: none;

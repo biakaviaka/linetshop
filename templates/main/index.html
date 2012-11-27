@@ -6,10 +6,10 @@
         {% cycle '<ul class="thumbnails">' '' %}
             <li class="span6">
                 <a class="thumbnail no_decor row" href="/product/{{ product.id }}">
-<!--                    <div class="thumbnail_img span6" style="background-image:url({{ product.image }})"></div>-->
-                    <div class="span6">
+                   <div class="thumbnail_img span6" style="background-image:url({{ product.image }})"></div>
+<!--                    <div class="span6">
                         <img src="{{ product.image }}" height="{{ product.height }}" width="{{ product.width }}" />
-                    </div>
+                    </div>-->
                     <p class="index_desc span6">{{ product.description }}</p>
                     <h3 class="text-success span12">{{ product.price|multiply:paytype.rate_usd }} грн.</h3>
                 </a>
