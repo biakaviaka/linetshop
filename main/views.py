@@ -124,9 +124,15 @@ def category(request, id, page = 1):
     paginator_range = range(range_first, range_last + 1)
 
     #TODO add new price calculation  
-    #for product in products
-        #if product.new_price:
-            #product.price = _calculate_percent(product.price, product.new_price)
+    for product in products.object_list:
+        if product.new_price:
+            product.price = _calculate_percent(product.price, product.new_price)
+            
+        image = _get_img_path(product, 'preview')
+        
+        product.image = image[0]
+        product.height = image[1]
+        product.width = image[2]
     
     return render_to_response('main/category.html', {
         'breadcrumbs' : breadcrumbs,
@@ -237,8 +243,10 @@ def _get_img_path(product, view = 'pic'):
         
     if not height or not width:
         path = default_img
-        height = width = 250
-    
+        if view == 'pic':
+            height = width = 250
+        else:
+            height = width = 100
 
     return [path, height, width]   
     
