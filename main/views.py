@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 from django.shortcuts import redirect, render_to_response, get_object_or_404
 from django.template import loader, RequestContext, Context
@@ -145,10 +146,21 @@ def category(request, id, page = 1):
     }, context_instance=RequestContext(request))
 
 
+def search(request, page = 1):
+    if request.method != 'GET':
+        return redirect('index')
+    
+    products = []
+    value = request.GET.get('search', '').strip()
 
-
-
-
+    if value:
+        products = Product.objects.filter(display=1, status__in=[1,3,4,], description__icontains="Ультрабук").order_by('ord')
+        
+    
+    return render_to_response('main/search.html', {
+        'products' : products,
+        'search_value' : value
+    }, context_instance=RequestContext(request))
 
     
 def _get_categories_id(id, data=[]):

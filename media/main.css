@@ -110,16 +110,18 @@ a.no_decor {
     line-height: 12px;
     vertical-align: middle;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
+.main_search {
+    margin-bottom: 22px;
+}
+.main_search input {
+    width: 66%;
+    height: 25px;
+}
+.main_search button {
+    width: 30%;
+    height: 35px;
+}
+.no_match {
+    line-height: 35px;
+    vertical-align: middle;
+}

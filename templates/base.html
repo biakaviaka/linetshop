@@ -52,6 +52,10 @@
             <div class="row-fluid">
                 <!--sidebar start-->
                 <div class="span3">
+                    <form class="input-append main_search" method="get" action="/search/">
+                        <input id="appendedInputButton" type="text" name="search" class="requested"  placeholder="Поиск товара" value="{{ search_value }}">
+                        <button type="submit" class="btn" type="button">Поиск</button>
+                    </form>
                     <ul class="nav nav-list well">
                         {% block sidemenu %}
                             {% for category in categories %}

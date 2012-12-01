@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^category/(?P<id>\d+)/$', category, name='category'),
     url(r'^category/(?P<id>\d+)/(?P<page>\d+)/$', category, name='category'),
     url(r'^product/(?P<id>\d+)/$', product, name='product'),
+    url(r'^search/$', search, name='search'),
 )
 
 if settings.DEBUG:
