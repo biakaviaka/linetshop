@@ -25,6 +25,37 @@
             {% endfor %}
             </tbody>
         </table>
+        
+        <!-- Pagination  -->
+        <div class="pagination pagination-centered pagination-small">
+            <ul>
+                {% if products.has_previous %}
+                    <li><a href= "/category/{{ id }}/{{ products.previous_page_number }}"><<</a></li>
+                {% endif %}
+                
+                {% if first %}
+                    <li><a href="/category/{{ id }}/{{ first }}">{{ first }}</a></li>
+                    <li class="disabled"><a href="#">...</a></li>
+                {% endif %}
+                    
+                {% for page in range %}
+                    {% ifequal page products.number %}
+                        <li class="active"><a href="/category/{{ id }}/{{ page }}">{{ page }}</a></li>
+                    {% else %}
+                        <li><a href="/category/{{ id }}/{{ page }}">{{ page }}</a></li>
+                    {% endifequal %}
+                {% endfor %}
+                
+                {% if last %}
+                    <li class="disabled"><a href="#">...</a></li>
+                    <li><a href="/category/{{ id }}/{{ last }}">{{ last }}</a></li>
+                {% endif %}
+                
+                {% if products.has_next %}
+                    <li><a href="/category/{{ id }}/{{ products.next_page_number }}">>></a></li>
+                {% endif %}  
+            </ul>
+        </div>
     {% else %}
         <p class="text-error no_match">По данному запросу ничего не найдено</p>
     {% endif %}

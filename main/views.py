@@ -10,6 +10,7 @@ from PIL import Image
 
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 
 def index(request):
     products = Product.objects.filter(display=1, bestseller=1, status__in=[1,3,4,]).order_by('ord')
@@ -32,7 +33,7 @@ def index(request):
     }, context_instance=RequestContext(request))
 
 def product(request, id):
-    product = get_object_or_404(Product, pk=id, display=1, status__in=[1,3,4,])
+    product = get_object_or_404(Product, pk=id, display=1)
     
     breadcrumbs = _breadcrumbs(product.category_id, [])
     
@@ -124,7 +125,6 @@ def category(request, id, page = 1):
 
     paginator_range = range(range_first, range_last + 1)
 
-    #TODO add new price calculation  
     for product in products.object_list:
         if product.new_price:
             product.price = _calculate_percent(product.price, product.new_price)
@@ -150,16 +150,70 @@ def search(request, page = 1):
     if request.method != 'GET':
         return redirect('index')
     
-    products = []
     value = request.GET.get('search', '').strip()
 
     if value:
-        products = Product.objects.filter(display=1, status__in=[1,3,4,], description__icontains="Ультрабук").order_by('ord')
+        try:
+            value_int=int(value)
+        except ValueError:
+            value_int=-1
+
+        products_query = Product.objects.filter(
+            Q(display=1), 
+            Q(status__in=[1,3,4,]), 
+            Q(description__icontains=value) |
+            Q(id=value_int)
+        ).order_by('ord')
+        
+        paginator = Paginator(products_query, config.MAX_PRODUCTS)
+    
+        last = paginator.num_pages
+        first = 1
+    
+        try:
+            page = int(page)
+        except ValueError: 
+            page = 1
+        
+        if page > last:
+            page = last
+                
+        try:
+            products = paginator.page(page)
+        except (InvalidPage, EmptyPage):
+            products = paginator.page(paginator.num_pages)
+        
+        if (page + 3) < last:
+            range_last = page + 3
+        else:
+            range_last = last
+            last = False
+    
+        if page - 3 > first:
+            range_first = page - 3
+        else:
+            range_first = first
+            first = False
+
+        paginator_range = range(range_first, range_last + 1)
+
+        for product in products.object_list:
+            if product.new_price:
+                product.price = _calculate_percent(product.price, product.new_price)
+                
+            image = _get_img_path(product, 'preview')
+            
+            product.image = image[0]
+            product.height = image[1]
+            product.width = image[2]
         
     
     return render_to_response('main/search.html', {
         'products' : products,
-        'search_value' : value
+        'search_value' : value,
+        'range' : paginator_range,
+        'first' : first,
+        'last' : last,
     }, context_instance=RequestContext(request))
 
     
