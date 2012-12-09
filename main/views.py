@@ -91,7 +91,7 @@ def category(request, id, page = 1):
     categories_list.reverse()
     sidemenu = _build_sidemenu(categories_list)
 
-    products_query = Product.objects.filter(display=1, status__in=[1,3,4,], category__in=categories_list_with_products).order_by('ord')
+    products_query = Product.objects.filter(display=1, status__in=[1,3,4,], category__in=categories_list_with_products).order_by('price')
     
     paginator = Paginator(products_query, config.MAX_PRODUCTS)
     
