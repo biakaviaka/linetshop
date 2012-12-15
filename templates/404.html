@@ -64,8 +64,10 @@
                 <!--sidebar end-->
                 <!--content start-->
                 <div class="span9">
-                    {% block content %} 404 - страница не найдена{% endblock %}
-                    
+                    {% block content %}
+                        <h3 class="text_blue">404 - Error</h3>
+                        <p>Страница не найдена. Возможно, страница была удалена администрацией сайта.</p>
+                    {% endblock %}
                     <hr />
                     <footer>
                         <p>{{ settings.footer }}</p>

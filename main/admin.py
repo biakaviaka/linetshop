@@ -64,7 +64,7 @@ class StatusAdmin(admin.ModelAdmin):
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('display', 'bestseller', 'id', 'source', 'title', 'category', 'price', 'status', 'brand')
     readonly_fields = ('id', 'source', 'category', 'brand', 'status', 'currency', 'title', 'description', 'features', 'price', 'garant', 'updated', 'weight', 'available_date', 'actual_date', 'photo', 'ord', 'mtstamp', 'preview_height', 'preview_width', 'recomended')
-    search_fields = ('id', 'title',)
+    search_fields = ('id', 'title', 'source',)
     list_filter = ('display','status','bestseller',)
     list_editable = ('display','bestseller',)
     list_display_links = ('id',)
