@@ -56,8 +56,8 @@ def product(request, id):
             
         if product.new_features:
             product.features = product.new_features
-            
-        if product.brand_id is not None:
+
+        if product.brand_id is not None and product.brand_id > 0:
             brand = Brand.objects.get(pk=product.brand_id)
             product.brand_title = brand.new_title or brand.title
             product.url = brand.new_url or brand.url
